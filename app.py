@@ -16,10 +16,8 @@ mongo = PyMongo(app, uri="mongodb://localhost:27017/mars_db")
 # Route to render index.html template using data from Mongo
 @app.route("/")
 def home():
-    print("hello")
     # Find one record of data from the mongo database
     mars_data = mongo.db.hemispere.find_one()
-    print(mars_data)
     # Return template and data
     return render_template("index.html", data = mars_data)
 
@@ -30,7 +28,6 @@ def body():
 
     # Run the scrape function
     scrape_data = scrape_mars.scrape()
-    print(scrape_data)
 
     # Update the Mongo database using update and upsert=True
     mongo.db.hemispere.update({}, scrape_data, upsert=True)

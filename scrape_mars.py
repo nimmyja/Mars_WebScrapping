@@ -10,20 +10,16 @@ def init_browser():
 
 def scrape():
     browser = init_browser()
-    dict_val ={'news_title':[],'news_p':[],'featured_image_url':[],'html_table':[],'hemisphere_image_urls':[]}
+    dict_val ={'news_title':{},'news_p':{},'featured_image_url':{},'html_table':{},'hemisphere_image_urls':[]}
 
     url = "https://redplanetscience.com/"
     browser.visit(url)
     html = browser.html
     soup = BeautifulSoup(html,'html.parser')
-    titles = soup.find_all('div', class_='content_title')
-    details = soup.find_all('div', class_='article_teaser_body')
-   
-    for title in titles:
-        dict_val['news_title'].append(title.text)
-    for detail in details:
-        dict_val['news_p'].append(detail.text)
-
+    titles = soup.find('div', class_='content_title')
+    details = soup.find('div', class_='article_teaser_body')
+    dict_val['news_title']=(titles.text)
+    dict_val['news_p']=(details.text)
     browser.quit()
 
     browser = init_browser()
@@ -33,7 +29,7 @@ def scrape():
     soup = BeautifulSoup(html,'html.parser')
     featured_image = soup.find('img', class_='headerimage fade-in')
     featured_image_url = url+featured_image['src']
-    dict_val['featured_image_url'].append(featured_image_url)
+    dict_val['featured_image_url']=(featured_image_url)
     browser.quit()
 
 
@@ -49,7 +45,7 @@ def scrape():
     df2.set_index(keys='Description',inplace = True)
     
     html_table = df2.to_html()
-    dict_val['html_table'].append(html_table)
+    dict_val['html_table']=html_table
     browser.quit()
 
     browser = init_browser()
@@ -64,25 +60,32 @@ def scrape():
 
     for x in results:
         title = x.find('h3').text
-        print(title)
-        image = x.find('img', class_='thumb')
-        image_url = url+image['src']
-        print(image_url)
+        image = x.find('a', class_='itemLink product-item')
+        image_url = url+image['href']
     
-        # Dictionary to be inserted into MongoDB
+        browser.visit(image_url)
+        html = browser.html
+        soup = BeautifulSoup(html,'html.parser')
+        
+        full_res_img_rec = soup.find('img', class_='wide-image')
+        full_res_img_url = url+full_res_img_rec['src']
+
+    
+    # Dictionary to be inserted into MongoDB
         hemisphere_image_urls = {
             'title': title,
-            'image_url': image_url
+            'image_url': full_res_img_url
         }
         dict_val['hemisphere_image_urls'].append(hemisphere_image_urls)
-        collection.insert_one(hemisphere_image_urls)
         
-    browser.quit()  
-    
+    browser.quit()    
+ 
 
 
 
     return dict_val
+
+
 
 
 

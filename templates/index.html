@@ -30,7 +30,7 @@
     </p>
   </div>
   <div class="container">
-    
+    {% if data.news_title|length %}
     <div class="container">
       <div class="row col-lg-12">
 
@@ -38,8 +38,8 @@
           <div class="card" style="width: 100%;">
             <div class="media-body">
               <h4>Latest Mars News</h4>
-              <h5 class="card-title">{{ data.news_title[0] }}</h5>
-              <p class="card-text">{{ data.news_p[0] }}</p>
+              <h5 class="card-title">{{ data.news_title}}</h5>
+              <p class="card-text">{{ data.news_p}}</p>
             </div>
           </div>
         </div>
@@ -52,13 +52,13 @@
             <div class="card-body">
               <h5 class="card-title">Featured Mars Image</h5>
             </div>
-            <img class="card-img-bottom" src="{{ data.featured_image_url[0]}}" alt="Card image cap">
+            <img class="card-img-bottom" src="{{ data.featured_image_url}}" alt="Card image cap">
           </div>
         </div>
         <div class="col-lg-4">
           <div class="card" style="width: 20rem;">
             <h4>Mars Facts</h4>
-            {{ data.html_table[0] | safe }}
+            {{ data.html_table | safe }}
           </div>
         </div>
       </div>
@@ -74,48 +74,22 @@
   <div class="row col-lg-12">
     <h4 style=" width:100%; padding-top: 50px; margin-top: 100px; text-align: center;">Mars Hemispheres</h4>
     <div class="card-deck">
-
+      {% for hemisphere in data.hemisphere_image_urls %}
       <div class="card">
 
-        <img class="card-img-top" src="{{data.hemisphere_image_urls[0].image_url}}" alt="Card image cap">
+        <img class="card-img-top" src="{{hemisphere.image_url}}" alt="Card image cap">
         <div class="card-body">
-          <h5 class="card-title">{{data.hemisphere_image_urls[0].title}}</h5>
-          <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional
-            content. This content is a little bit longer.</p>
+        
+          <p class="card-text">{{hemisphere.title}}</p>
         </div>
 
       </div>
-      <div class="card">
-        <img class="card-img-top" src="{{data.hemisphere_image_urls[1].image_url}}" alt="Card image cap">
-        <div class="card-body">
-          <h5 class="card-title">{{data.hemisphere_image_urls[1].title}}</h5>
-          <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-        </div>
+      {% endfor %}
 
-      </div>
-      <div class="card">
-        <img class="card-img-top" src="{{data.hemisphere_image_urls[2].image_url}}" alt="Card image cap">
-        <div class="card-body">
-          <h5 class="card-title">{{data.hemisphere_image_urls[2].title}}</h5>
-          <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional
-            content. This card has even longer content than the first to show that equal height action.</p>
-        </div>
-
-      </div>
-
-
-      <div class="card">
-        <img class="card-img-top" src="{{data.hemisphere_image_urls[3].image_url}}" alt="Card image cap">
-        <div class="card-body">
-          <h5 class="card-title">{{data.hemisphere_image_urls[3].title}}</h5>
-          <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional
-            content. This card has even longer content than the first to show that equal height action.</p>
-        </div>
-
-      </div>
     </div>
   </div>
 </div>
+{% endif %}
 </div>
 </body>
 </body>
